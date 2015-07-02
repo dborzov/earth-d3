@@ -1,14 +1,25 @@
-var width = 960,
+var colorScheme = {
+  land: "#f6fcfb",
+  sea: "#6ea5cf",
+  space: "#121e37"
+}
+
+var width = 1000,
     height = 500,
     globe = {type: "Sphere"};
 
 var projection = d3.geo.orthographic()
-    .scale(248)
-    .clipAngle(90);
+    .scale(548)
+    .clipAngle(80);
 
-var canvas = d3.select("body").append("canvas")
+var canvas = d3.select("canvas")
     .attr("width", width)
     .attr("height", height);
+
+var clearScreen = function() {
+  cxt.fillStyle = colorScheme.space;
+  cxt.fillRect(0, 0, width, height);
+};
 
 var cxt = canvas.node().getContext("2d");
 
@@ -51,18 +62,17 @@ function ready(error, world, names) {
               r = d3.interpolate(projection.rotate(), [-p[0], -p[1]]);
           return function(t) {
             projection.rotate(r(t));
-            cxt.clearRect(0, 0, width, height);
+            clearScreen();
             drawGlobe();
-            cxt.fillStyle = "#bbb", cxt.beginPath(), path(land), cxt.fill();
-            cxt.fillStyle = "#f00", cxt.beginPath(), path(countries[i]), cxt.fill();
-            cxt.strokeStyle = "#fff", cxt.lineWidth = .5, cxt.beginPath(), path(borders), cxt.stroke();
+            cxt.fillStyle = colorScheme.land, cxt.beginPath(), path(land), cxt.fill();
+            cxt.strokeStyle = colorScheme.space, cxt.lineWidth = 0.5, cxt.beginPath(), path(land), cxt.stroke();
           };
         });
   })();
 }
 
 function drawGlobe() {
-   cxt.fillStyle = "#6682ad";
+   cxt.fillStyle = colorScheme.sea;
    cxt.lineWidth = 3;
    cxt.beginPath();
    path(globe);

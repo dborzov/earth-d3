@@ -6,3 +6,7 @@ h1 {
   text-align: center;
   width: 960px;
 }
+
+html, body, canvas{ 
+  width:100%;
+}
