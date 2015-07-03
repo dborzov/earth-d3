@@ -31,6 +31,7 @@ var GlobeView = function(world) {
         .projection(this.projection)
         .context(this.cxt);
 
+    this.projection.rotate([this.longitude, this.lattitude]);
     this.draw();
   }
 
