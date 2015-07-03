@@ -13,8 +13,8 @@ var GlobeView = function(world) {
 
   var p = d3.geo.centroid(this._regions[0]);
   this.scale = 548;
-  this.longitude = -p[0];
-  this.lattitude = -p[1];
+  this.longitude = 0.;
+  this.lattitude = 0.;
 
   this.render = function() {
     var canvas = d3.select("#globe-view")
@@ -62,6 +62,7 @@ var GlobeView = function(world) {
 
   var self = this;
   this.rotate = function() {
+    console.log("rotating to long: ", this.longitude, ", lat: ", this.lattitude);
     d3.transition()
         .duration(250)
         .tween("rotate", function() {
@@ -74,22 +75,22 @@ var GlobeView = function(world) {
   }
 
   this.rotateLeft = function() {
-    this.longitude += 5;
+    this.longitude = this.longitude + 5 > 180 ? (this.longitude -360 + 5) : (this.longitude + 5);
     this.rotate();
   }
 
   this.rotateRight = function() {
-    this.longitude -= 5;
+    this.longitude = this.longitude -5 <= -180 ? (this.longitude + 360 - 5) : this.longitude -5;
     this.rotate();
   }
 
   this.rotateUp = function() {
-    this.lattitude -= 5;
+    this.lattitude = this.lattitude <= -85 ? this.lattitude : this.lattitude - 5;
     this.rotate();
   }
 
   this.rotateDown = function() {
-    this.lattitude += 5;
+    this.lattitude = this.lattitude >= 85 ? this.lattitude : this.lattitude + 5;
     this.rotate();
   }
 
