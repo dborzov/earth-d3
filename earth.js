@@ -1,49 +1,9 @@
-var zoomIn = function() {},
-    zoomOut = function() {};
-
-var colorScheme = {
-  land: "#f6fcfb",
-  sea: "#6ea5cf",
-  space: "#121e37"
-}
-
-var scale = 548;
-
 var width = 1000,
     height = 500,
     globe = {type: "Sphere"};
 
-var projection = d3.geo.orthographic()
-    .scale(scale)
-    .clipAngle(80);
-
-var canvas = d3.select("canvas")
-    .attr("width", width)
-    .attr("height", height);
-
-var clearScreen = function() {
-  cxt.fillStyle = colorScheme.space;
-  cxt.fillRect(0, 0, width, height);
-};
-
-var cxt = canvas.node().getContext("2d");
-
-var path = d3.geo.path()
-    .projection(projection)
-    .context(cxt);
-
-
-queue()
-    .defer(d3.json, "/world-110m.json")
-    .defer(d3.tsv, "world-country-names.tsv")
-    .await(ready);
 
 function ready(error, world, names) {
-  if (error) throw error;
-
-  var land = topojson.feature(world, world.objects.land),
-      countries = topojson.feature(world, world.objects.countries).features,
-      borders = topojson.mesh(world, world.objects.countries, function(a, b) { return a !== b; }),
       i = 0,
       n = countries.length;
 
@@ -54,6 +14,7 @@ function ready(error, world, names) {
   }).sort(function(a, b) {
     return a.name.localeCompare(b.name);
   });
+
   (function transition() {
     d3.transition()
         .duration(1250)
@@ -68,6 +29,25 @@ function ready(error, world, names) {
           };
         });
   })();
+
+  var p = d3.geo.centroid(countries[i]);
+  var long = -p[0],
+       lat =-p[1];
+  rotateLeft = function() {
+      long += 5.;
+      console.log("long, lat: ", long, lat);
+      d3.transition()
+          .duration(250)
+          .tween("rotate", function() {
+            var r = d3.interpolate(projection.rotate(), [long, lat]);
+            return function(t) {
+              projection.rotate(r(t));
+              clearScreen();
+              drawGlobe();
+              render(land);
+            };
+          });
+  }
 
   zoomIn = function() {
     console.log("zooming in to: ", scale);

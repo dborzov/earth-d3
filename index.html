@@ -6,13 +6,18 @@
 <body>
   <div id="control-panel">
     Something something Earth
-    <button onClick="zoomIn()">+</button>
-    <button onClick="zoomOut()">-</button>
+    <button onClick="renderer.zoomIn()">+</button>
+    <button onClick="renderer.zoomOut()">-</button>
+    <button onClick="renderer.rotateLeft()"> ← </button>
+    <button onClick="renderer.rotateRight()"> → </button>
+    <button onClick="renderer.rotateUp()"> ↑ </button>
+    <button onClick="renderer.rotateDown()"> ↓ </button>
+
   </div>
-  <canvas>
+  <canvas id="globe-view">
   </canvas>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
-  <script src="/earth.js"></script>
+  <script src="/dist/app.js"></script>
 </body>
